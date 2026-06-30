@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FitTrack Pro · Fitness Tracking App</title>
+    
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="container" id="app">
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-heartbeat"></i>
+            <h1>FitTrack Pro</h1>
+            
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-outline" onclick="exportData()">
+                <i class="fas fa-download"></i> Export
+            </button>
+            <button class="btn btn-outline" onclick="importData()">
+                <i class="fas fa-upload"></i> Import
+            </button>
+        </div>
+    </header>
+
+    <!-- ===== STATS ===== -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">👟</div>
+            <div class="stat-label">Total Steps</div>
+            <div class="stat-value" id="totalSteps">0</div>
+            <div class="stat-change"><i class="fas fa-arrow-up"></i> Today</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🔥</div>
+            <div class="stat-label">Calories Burned</div>
+            <div class="stat-value" id="totalCalories">0</div>
+            <div class="stat-change"><i class="fas fa-arrow-up"></i> Today</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">💪</div>
+            <div class="stat-label">Workouts</div>
+            <div class="stat-value" id="totalWorkouts">0</div>
+            <div class="stat-change">Today</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⏱️</div>
+            <div class="stat-label">Active Minutes</div>
+            <div class="stat-value" id="totalMinutes">0</div>
+            <div class="stat-change">Today</div>
+        </div>
+    </div>
+
+    <!-- ===== PROGRESS BARS ===== -->
+    <div class="progress-section">
+        <div class="section-title"><i class="fas fa-chart-simple"></i> Daily Progress</div>
+        
+        <div class="progress-item">
+            <div class="progress-header">
+                <span><i class="fas fa-shoe-prints"></i> Steps</span>
+                <span id="stepsText">0 / 10,000</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill blue" id="stepsFill"></div>
+            </div>
+        </div>
+        
+        <div class="progress-item">
+            <div class="progress-header">
+                <span><i class="fas fa-fire"></i> Calories</span>
+                <span id="caloriesText">0 / 2,000</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill green" id="caloriesFill"></div>
+            </div>
+        </div>
+        
+        <div class="progress-item">
+            <div class="progress-header">
+                <span><i class="fas fa-dumbbell"></i> Workouts</span>
+                <span id="workoutsText">0 / 3</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill orange" id="workoutsFill"></div>
+            </div>
+        </div>
+        
+        <div class="progress-item">
+            <div class="progress-header">
+                <span><i class="fas fa-clock"></i> Minutes</span>
+                <span id="minutesText">0 / 60</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill purple" id="minutesFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CHART ===== -->
+    <div class="chart-section">
+        <div class="section-title"><i class="fas fa-chart-line"></i> Weekly Activity</div>
+        <div class="chart-wrapper">
+            <canvas id="weeklyChart"></canvas>
+        </div>
+    </div>
+
+    <!-- ===== LOG FORM ===== -->
+    <div class="log-section">
+        <div class="section-title"><i class="fas fa-pen-to-square"></i> Log Activity</div>
+        
+        <div class="log-form" id="logForm">
+            <div class="form-group">
+                <label>Exercise Type</label>
+                <select id="exerciseType" required>
+                    <option value="Walking">🚶 Walking</option>
+                    <option value="Running">🏃 Running</option>
+                    <option value="Cycling">🚴 Cycling</option>
+                    <option value="Swimming">🏊 Swimming</option>
+                    <option value="Yoga">🧘 Yoga</option>
+                    <option value="Strength">🏋️ Strength</option>
+                    <option value="Other">📌 Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Minutes</label>
+                <input type="number" id="minutesInput" value="30" min="1" />
+            </div>
+            <div class="form-group">
+                <label>Steps</label>
+                <input type="number" id="stepsInput" value="2000" min="0" />
+            </div>
+            <div class="form-group">
+                <label>Calories</label>
+                <input type="number" id="caloriesInput" value="150" min="0" />
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button class="btn btn-primary" onclick="addEntry()">
+                <i class="fas fa-plus-circle"></i> Log Entry
+            </button>
+            <button class="btn btn-danger" onclick="clearAll()">
+                <i class="fas fa-trash"></i> Clear All
+            </button>
+            <button class="btn btn-success" onclick="addSampleData()">
+                <i class="fas fa-flask"></i> Add Sample Data
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== LOG LIST ===== -->
+    <div class="log-section">
+        <div class="log-list-header">
+            <div class="section-title" style="margin-bottom:0;">
+                <i class="fas fa-list-ul"></i> Recent Entries
+                <span id="entryCount" style="font-size:14px; color:#94a3b8; font-weight:400;">(0)</span>
+            </div>
+        </div>
+        
+        <div class="log-list" id="logList">
+            <div class="empty-state">
+                <i class="fas fa-dumbbell"></i>
+                <p>No entries yet. Start tracking your fitness!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast"></div>
+
+<!-- External JavaScript -->
+<script src="script.js"></script>
+
+</body>
+</html>
